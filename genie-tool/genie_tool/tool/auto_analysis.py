@@ -157,6 +157,9 @@ def create_agent(
     model = os.getenv("ANALYSIS_MODEL", "gpt-4.1")
     base_url = os.getenv("OPENAI_BASE_URL")
     api_key = os.getenv("OPENAI_API_KEY")
+    # OpenAIServerModel 直接发送模型名称，需要去掉 litellm 的 provider 前缀
+    if model.startswith("openai/"):
+        model = model[len("openai/"):]
     _model = OpenAIServerModel(
         model_id=model,
         api_base=base_url,

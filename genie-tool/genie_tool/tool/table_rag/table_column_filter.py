@@ -31,10 +31,11 @@ class ColumnFilterModule:
         
         self.llm_model_name = os.getenv("TR_TABLE_FILTER_MODEL_NAME")
         self.table_filter_model_name = os.getenv("TR_COLUMN_FILTER_MODEL_NAME")
-        
+
         self._is_first_filter_table = os.getenv("TR_IS_FIRST_FILTER_TABLE", True)
         self.need_filter_table_min_length = int(os.getenv("TR_NEED_FILTER_TABLE_MIN_LENGTH", 3))
-        self.table_filter_batch_size = int(os.getenv("TR_TABLE_FILTER_BATCH_SIZE", 5))
+        self.table_filter_batch_size = int(os.getenv("TR_TABLE_FILTER_BATCH_SIZE", 1))
+        self.api_request_delay = float(os.getenv("TR_API_REQUEST_DELAY", 0.5))
         
         # self.body = request_body
         # self.user_info = request_body.get("user_info", "")
@@ -202,13 +203,19 @@ class ColumnFilterModule:
             raise RuntimeError("解析llm json结果失败")
     
     async def _filter_single_table(self, semaphore, table_schema_info: dict) -> dict | None:
-        
+
         async with semaphore:
             llm_response = ""
             request_id = ""
             error_msg = None
             for retry in range(3):
                 try:
+                    # 添加延迟以避免速率限制
+                    if retry > 0:
+                        await asyncio.sleep((2 ** retry) * self.api_request_delay)  # 指数退避
+                    else:
+                        await asyncio.sleep(self.api_request_delay)  # 请求之间添加延迟
+
                     columns_prompt = self._generate_filter_prompt(table_schema_info, error_msg)
                     
                     messages = [
@@ -318,6 +325,9 @@ class ColumnFilterModule:
         async with semaphore:
             if schema_info_list is None or len(schema_info_list) == 0:
                 return []
+            # 添加延迟以避免速率限制
+            await asyncio.sleep(self.api_request_delay)
+
             error_msg = ""
             max_retry = 3
             #

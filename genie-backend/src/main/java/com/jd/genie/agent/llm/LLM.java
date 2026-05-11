@@ -224,7 +224,8 @@ public class LLM {
             // 准备请求参数
             Map<String, Object> params = new HashMap<>();
             params.put("model", model);
-            if (StringUtils.isNotEmpty(llmErp)) {
+            // 只有非GLM模型才添加erp参数（智谱AI不支持此参数）
+            if (StringUtils.isNotEmpty(llmErp) && !model.startsWith("glm")) {
                 params.put("erp", llmErp);
             }
             params.put("messages", formattedMessages);
@@ -446,7 +447,8 @@ public class LLM {
             formattedMessages.addAll(formatMessages(messages, model.contains("claude")));
 
             params.put("model", model);
-            if (StringUtils.isNotEmpty(llmErp)) {
+            // 只有非GLM模型才添加erp参数（智谱AI不支持此参数）
+            if (StringUtils.isNotEmpty(llmErp) && !model.startsWith("glm")) {
                 params.put("erp", llmErp);
             }
             params.put("messages", formattedMessages);
@@ -578,6 +580,7 @@ public class LLM {
 
             // 添加适当的认证头
             requestBuilder.addHeader("Authorization", "Bearer " + apiKey);
+            requestBuilder.addHeader("Content-Type", "application/json");
 
             Request request = requestBuilder.build();
 
@@ -591,8 +594,10 @@ public class LLM {
                 public void onResponse(Call call, Response response) throws IOException {
                     try (ResponseBody responseBody = response.body()) {
                         if (!response.isSuccessful()) {
+                            String errorBody = responseBody != null ? responseBody.string() : "No response body";
+                            log.error("LLM API call failed with status {}: {}", response.code(), errorBody);
                             future.completeExceptionally(
-                                    new IOException("Unexpected response code: " + response)
+                                    new IOException("Unexpected response code: " + response + ", body: " + errorBody)
                             );
                         } else {
                             future.complete(responseBody.string());
@@ -629,6 +634,7 @@ public class LLM {
                     .post(body);
             // 添加适当的认证头
             requestBuilder.addHeader("Authorization", "Bearer " + apiKey);
+            requestBuilder.addHeader("Content-Type", "application/json");
             Request request = requestBuilder.build();
 
             GenieConfig genieConfig = SpringContextHolder.getApplicationContext().getBean(GenieConfig.class);
@@ -821,6 +827,7 @@ public class LLM {
                     .post(body);
             // 添加适当的认证头
             requestBuilder.addHeader("Authorization", "Bearer " + apiKey);
+            requestBuilder.addHeader("Content-Type", "application/json");
             Request request = requestBuilder.build();
 
             GenieConfig genieConfig = SpringContextHolder.getApplicationContext().getBean(GenieConfig.class);
@@ -1017,6 +1024,7 @@ public class LLM {
 
             // 添加适当的认证头
             requestBuilder.addHeader("Authorization", "Bearer " + apiKey);
+            requestBuilder.addHeader("Content-Type", "application/json");
 
             Request request = requestBuilder.build();
 
