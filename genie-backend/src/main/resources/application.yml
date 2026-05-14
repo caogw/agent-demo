@@ -37,7 +37,7 @@ logging:
     root: INFO
 llm:
   default:
-    base_url: 'https://open.bigmodel.cn/api/paas/v4'
+    base_url: 'https://open.bigmodel.cn/api/coding/paas/v4' 
     apikey: '1db5dd55676e49a1939e06fc7abe4450.PofHjmBrTRXyBxy7'
     interface_url: '/chat/completions'
     model: glm-4-plus
@@ -46,7 +46,7 @@ llm:
         "model": "glm-4-plus",
         "maxTokens": 4096,
         "temperature": 0,
-        "baseUrl": "https://open.bigmodel.cn/api/paas/v4",
+        "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
         "apiKey": "1db5dd55676e49a1939e06fc7abe4450.PofHjmBrTRXyBxy7",
         "interfaceUrl": "/chat/completions",
         "maxInputTokens": 8192
@@ -55,7 +55,7 @@ llm:
         "model": "glm-4",
         "maxTokens": 4096,
         "temperature": 0,
-        "baseUrl": "https://open.bigmodel.cn/api/paas/v4",
+        "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
         "apiKey": "1db5dd55676e49a1939e06fc7abe4450.PofHjmBrTRXyBxy7",
         "interfaceUrl": "/chat/completions",
         "maxInputTokens": 8192
