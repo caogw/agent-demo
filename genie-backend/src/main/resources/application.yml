@@ -4,22 +4,22 @@ spring:
   config:
     encoding: UTF-8
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:genie;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        trace: false
-        web-allow-others: false
-  sql:
-    init:
-      schema-locations: classpath:db/schema.sql
-      data-locations: classpath:db/data.sql
-      mode: always
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://117.72.194.132:3306/agent_report?characterEncoding=utf8&useSSL=false
+    username: root
+    password: ZUk8zHs94vI32WKS
+#  h2:
+#    console:
+#      enabled: false
+#      path: /h2-console
+#      settings:
+#        trace: false
+#        web-allow-others: false
+#  sql:
+#    init:
+#      schema-locations: classpath:db/schema.sql
+#      data-locations: classpath:db/data.sql
+#      mode: always
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
@@ -319,12 +319,12 @@ Assistant：现在需要在上一步列举出的11、22、33、44、55、66、77
       port: 443
       apiKey: key
     db-config:
-      type: h2
-      host:
-      port: 0
-      schema: genie
-      username: sa
-      password:
+      type: mysql
+      host: 117.72.194.132
+      port: 3306
+      schema: agent_report?characterEncoding=utf8&useSSL=false
+      username: root
+      password: ZUk8zHs94vI32WKS
     model-list:
       - name: 超市销售明细数据
         id: t_qtpbgamccmrctthlurauclckq
