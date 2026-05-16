@@ -1,0 +1,33 @@
+# qwen3:14b GPU 优化版本 - 适用于 Apple M4 Pro
+# 基于原版 qwen3:14b，添加 Metal GPU 加速配置
+
+FROM qwen3:14b
+
+# === GPU 加速配置 ===
+# num_gpu: 将多少层加载到 GPU (99 表示尽可能使用 GPU)
+# 对于 M4 Pro，推荐设置为 99 或 -1 (全部)
+PARAMETER num_gpu 99
+
+# === CPU 线程配置 ===
+# M4 Pro 有 20 个核心，但不应全部用于推理（会影响系统响应）
+# 8-12 个线程是最佳平衡点
+PARAMETER num_thread 10
+
+# === 内存优化 ===
+# 上下文长度：根据需求调整，4096-8192 是常用范围
+PARAMETER num_ctx 4096
+
+# === 性能优化参数 ===
+# 减少重复
+PARAMETER repeat_last_n 64
+PARAMETER repeat_penalty 1.1
+
+# 采样参数
+PARAMETER temperature 0.8
+PARAMETER top_p 0.9
+PARAMETER top_k 40
+
+# === 批处理优化 ===
+# num_batch: 提高批处理大小可以提高吞吐量
+# M4 Pro 可以处理较大的批次
+PARAMETER num_batch 512
